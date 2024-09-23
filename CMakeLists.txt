@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.13)  # for CMP0077
 
 project(duckx VERSION 0.2)
 
