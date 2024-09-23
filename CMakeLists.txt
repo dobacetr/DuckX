@@ -16,19 +16,12 @@ option(DUCKX_INSTALL "Install DuckX" ON)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/duckx.hpp"
-            "${CMAKE_CURRENT_SOURCE_DIR}/include/constants.hpp"
-            "${CMAKE_CURRENT_SOURCE_DIR}/include/duckxiterator.hpp")
+set(HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/duckx/duckx.hpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/include/duckx/constants.hpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/include/duckx/duckxiterator.hpp")
 set(SOURCES src/duckx.cpp)
 
-set(THIRD_PARTY_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/pugixml/pugixml.hpp"
-                        "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/pugixml/pugiconfig.hpp"
-                        "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/zip/zip.h")
 set(THIRD_PARTY_SRC "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/zip/zip.c")
-
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include"
-                    "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/pugixml"
-                    "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/zip")
 
 if(BUILD_SHARED_LIBS)
     add_library(duckx SHARED ${SOURCES} ${THIRD_PARTY_SRC})
@@ -38,8 +31,11 @@ endif()
 
 add_library(duckx::duckx ALIAS duckx)
 
+target_include_directories(duckx PRIVATE src include/duckx)
 target_include_directories(duckx PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/pugixml>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/zip>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -69,7 +65,7 @@ if (DUCKX_INSTALL)
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         )
     install(EXPORT duckxConfig NAMESPACE duckx:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/duckx)
-    install(FILES ${HEADERS} ${THIRD_PARTY_HEADERS} DESTINATION include/duckx)
+    install(FILES ${HEADERS} DESTINATION include)
 endif()
 
 

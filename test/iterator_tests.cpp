@@ -1,6 +1,6 @@
 #include <sstream>
-#include <duckx.hpp>
-#include <duckxiterator.hpp>
+#include <duckx/duckx.hpp>
+#include <duckx/duckxiterator.hpp>
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"

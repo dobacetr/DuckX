@@ -11,10 +11,11 @@
 #include <stdlib.h>
 #include <string>
 
-#include <constants.hpp>
-#include <duckxiterator.hpp>
 #include <pugixml.hpp>
 #include <zip.h>
+
+#include "constants.hpp"
+#include "duckxiterator.hpp"
 
 // TODO: Use container-iterator design pattern!
 

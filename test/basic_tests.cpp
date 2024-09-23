@@ -1,5 +1,5 @@
 #include <sstream>
-#include <duckx.hpp>
+#include <duckx/duckx.hpp>
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
