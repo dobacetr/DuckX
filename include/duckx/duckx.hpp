@@ -148,6 +148,8 @@ class Document {
   public:
     Document();
     Document(std::string);
+    Document(Document &&) = default;
+    Document &operator=(Document &&) = default;
     void file(std::string);
     void open();
     void save() const;
