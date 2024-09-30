@@ -36,6 +36,7 @@ class Run {
     void set_current(pugi::xml_node);
 
     std::string get_text() const;
+    const pugi::xml_node &get_node() const;
     bool set_text(const std::string &) const;
     bool set_text(const char *) const;
 
