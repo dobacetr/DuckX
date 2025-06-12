@@ -1,6 +1,7 @@
 #include "duckx.hpp"
 
 #include <cctype>
+#include <fstream>
 
 // Hack on pugixml
 // We need to write xml to std string (or char *)
@@ -12,6 +13,12 @@ struct xml_string_writer : pugi::xml_writer {
         result.append(static_cast<const char *>(data), size);
     }
 };
+
+static bool is_file_exist(const char *fileName)
+{
+    std::ifstream infile(fileName);
+    return infile.good();
+}
 
 duckx::Run::Run() {}
 
@@ -326,17 +333,29 @@ void duckx::Document::save() const {
 
         // Skip copying the original file
         if (std::string(name) != std::string("word/document.xml")) {
-            // Read the old content
-            void *entry_buf;
-            size_t entry_buf_size;
-            zip_entry_read(orig_zip, &entry_buf, &entry_buf_size);
 
-            // Write into new zip
-            zip_entry_open(new_zip, name);
-            zip_entry_write(new_zip, entry_buf, entry_buf_size);
-            zip_entry_close(new_zip);
+            auto itRep = fileReplaceMap.find(std::string(name));
+            if( itRep != fileReplaceMap.end() )
+            {
+                zip_entry_open(new_zip, name);
+                zip_entry_fwrite(new_zip, itRep->second.c_str());
+                zip_entry_close(new_zip);
 
-            free(entry_buf);
+            } else {
+
+                // Read the old content
+                void *entry_buf;
+                size_t entry_buf_size;
+                zip_entry_read(orig_zip, &entry_buf, &entry_buf_size);
+
+                // Write into new zip
+                zip_entry_open(new_zip, name);
+                zip_entry_write(new_zip, entry_buf, entry_buf_size);
+                zip_entry_close(new_zip);
+
+                free(entry_buf);
+                
+            }
         }
 
         zip_entry_close(orig_zip);
@@ -353,6 +372,15 @@ void duckx::Document::save() const {
 
 bool duckx::Document::is_open() const {
     return this->flag_is_open;
+}
+
+bool duckx::Document::replace_file(std::string const &originalFilePath,
+                                   std::string const &newFilePath) {
+    if (is_file_exist(newFilePath.c_str())) {
+        fileReplaceMap[originalFilePath] = newFilePath;
+        return true;
+    }
+    return false;
 }
 
 duckx::Paragraph &duckx::Document::paragraphs() {

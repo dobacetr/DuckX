@@ -10,6 +10,7 @@
 #include <cstdio>
 #include <stdlib.h>
 #include <string>
+#include <unordered_map>
 
 #include <pugixml.hpp>
 #include <zip.h>
@@ -146,6 +147,8 @@ class Document {
     pugi::xml_document document;
     bool flag_is_open;
 
+    std::unordered_map<std::string, std::string> fileReplaceMap;
+
   public:
     Document();
     Document(std::string);
@@ -156,6 +159,7 @@ class Document {
     void save() const;
     bool is_open() const;
 
+    bool replace_file(std::string const& originalFilePath, std::string const& newFilePath);
     Paragraph &paragraphs();
     Table &tables();
 };
