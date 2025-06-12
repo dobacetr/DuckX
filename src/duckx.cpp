@@ -272,7 +272,7 @@ void duckx::Document::open() {
     zip_entry_close(zip);
     zip_close(zip);
 
-    this->document.load_buffer(buf, bufsize);
+    this->document.load_buffer(buf, bufsize, pugi::parse_default | pugi::parse_ws_pcdata_single);
 
     free(buf);
 
